@@ -1,3 +1,4 @@
+/* eslint-disable vue/valid-v-else */
 <template>
   <el-menu
     class="the-menu"
@@ -8,19 +9,32 @@
     :active-text-color="themeMenu.active_text"
   >
     <div class="the-menu-logo">{{is_collapse?'WL':'WL微前端项目'}}</div>
-    <el-submenu v-for="sub of menu" :key="sub.id" :index="sub.id">
+    <el-submenu v-for="sub of menu_data" :key="sub.id" :index="sub.id">
       <template slot="title">
         <i class="menu-icon" :class="sub.icon"></i>
         <span class="menu-sub-title">{{sub.title}}</span>
       </template>
-      <el-menu-item
-        v-for="item of sub.children"
-        :key="item.id"
-        :index="item.id"
-        @click="goto(sub.module, item.url)"
-      >
-        <span class="menu-item-title">{{item.title}}</span>
-      </el-menu-item>
+      <template  v-for="item of sub.children">
+         <el-menu-item
+            v-if="!item.children"
+            :key="item.id"
+            :index="item.id"
+            @click="goto(sub.module, item.url)"
+          >
+          <span class="menu-item-title">{{item.title}}</span>
+         </el-menu-item>
+          <el-submenu  v-if="item.children"  :key="item.id" >
+           <template slot="title">{{item.title}}</template>
+            <el-menu-item
+            v-for="item1 of item.children"
+              :key="item1.id"
+              :index="item1.id"
+              @click="goto(item.module, item1.url)"
+            >
+            <span class="menu-item-title">{{item1.title}}</span>
+          </el-menu-item>
+        </el-submenu>
+      </template>
     </el-submenu>
   </el-menu>
 </template>
@@ -48,7 +62,7 @@ export default {
           id: "1",
           title: "wl-ui组件",
           icon: "el-icon-monitor",
-          module: "subapp-ui",
+          module: "subapp-ui111",
           children: [
             {
               id: "1-1",
@@ -59,14 +73,19 @@ export default {
               id: "1-2",
               title: "日历",
               url: "/ui/about"
-            }
+            },
+              {
+              id: "2-1",
+              title: "报表",
+              url: "/blog"
+            },
           ]
         },
         {
           id: "2",
           title: "博客",
           icon: "el-icon-date",
-          module: "subapp-blog",
+          module: "subapp-blog111",
           children: [
             {
               id: "2-1",
@@ -97,7 +116,7 @@ export default {
   },
   methods: {
     // 跨应用路由跳转
-    goto(title, href) {
+    goto(title, href) { 
       routerGo(href, title);
     }
   }

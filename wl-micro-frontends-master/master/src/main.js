@@ -92,13 +92,13 @@ function render({ appContent, loading } = {}) {
     }
 };
 render();
-
 // 获取app注册表
 getAppConfigApi().then(({ data }) => {
+    
     if (data.code === 200) {
         let _res = data.data || [];
         // 处理菜单
-        store.dispatch('menu/setUserMenu', _res);
+        // store.dispatch('menu/setUserMenu', _res);
         if (_res.length === 0) {
             Message({
                 type: 'error',
@@ -110,6 +110,7 @@ getAppConfigApi().then(({ data }) => {
         let isDev = process.env.NODE_ENV === 'development';
         let apps = [];
         let defaultApp = null;
+        
         _res.forEach(i => {
             apps.push({
                 name: i.module,
@@ -120,6 +121,7 @@ getAppConfigApi().then(({ data }) => {
             })
             if (i.defaultRegister) defaultApp = i.routerBase;
         });
+        
         // 注册子应用
         registerMicroApps(apps, {
             beforeLoad: [
